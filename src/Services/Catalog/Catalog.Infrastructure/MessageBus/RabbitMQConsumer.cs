@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-
 namespace Catalog.Infrastructure.MessageBus
 {
     public class RabbitMQConsumer : IDisposable
@@ -33,15 +32,14 @@ namespace Catalog.Infrastructure.MessageBus
         private void InitializeRabbitMQ()
         {
             try
-            {
-                var factory = new ConnectionFactory
+            {                var factory = new ConnectionFactory
                 {
                     HostName = _settings.HostName,
                     UserName = _settings.UserName,
                     Password = _settings.Password,
                     VirtualHost = _settings.VirtualHost,
-                    Port = _settings.Port,
-                    DispatchConsumersAsync = true
+                    Port = _settings.Port
+                    // DispatchConsumersAsync removed for compatibility with RabbitMQ.Client 6.5.0
                 };
 
                 _connection = factory.CreateConnection();

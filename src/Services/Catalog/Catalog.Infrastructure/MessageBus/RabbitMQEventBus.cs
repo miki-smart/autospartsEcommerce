@@ -5,6 +5,7 @@ using Catalog.Domain.Events;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace Catalog.Infrastructure.MessageBus
 {
@@ -120,7 +121,6 @@ namespace Catalog.Infrastructure.MessageBus
                 _channel?.Dispose();
                 _channel = null;
 
-                _connection?.Close();
                 _connection?.Dispose();
                 _connection = null;
             }

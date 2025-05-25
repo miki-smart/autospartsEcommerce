@@ -8,6 +8,7 @@ C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Application\obj\D
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Application\obj\Debug\net9.0\Catalog.Application.AssemblyInfoInputs.cache
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Application\obj\Debug\net9.0\Catalog.Application.AssemblyInfo.cs
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Application\obj\Debug\net9.0\Catalog.Application.csproj.CoreCompileInputs.cache
+C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Application\obj\Debug\net9.0\Catalog.Application.sourcelink.json
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Application\obj\Debug\net9.0\Catalog..75771DFE.Up2Date
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Application\obj\Debug\net9.0\Catalog.Application.dll
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Application\obj\Debug\net9.0\refint\Catalog.Application.dll

@@ -3,6 +3,7 @@ C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Infrastructure\ob
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Infrastructure\obj\Debug\net9.0\Catalog.Infrastructure.AssemblyInfoInputs.cache
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Infrastructure\obj\Debug\net9.0\Catalog.Infrastructure.AssemblyInfo.cs
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Infrastructure\obj\Debug\net9.0\Catalog.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Infrastructure\obj\Debug\net9.0\Catalog.Infrastructure.sourcelink.json
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Infrastructure\bin\Debug\net9.0\Catalog.Infrastructure.deps.json
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Infrastructure\bin\Debug\net9.0\Catalog.Infrastructure.dll
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Infrastructure\bin\Debug\net9.0\Catalog.Infrastructure.pdb

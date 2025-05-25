@@ -1,4 +1,4 @@
-C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\bin\Debug\net9.0\Catalog.Domain.deps.json
+c:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\bin\Debug\net9.0\Catalog.Domain.deps.json
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\bin\Debug\net9.0\Catalog.Domain.dll
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\bin\Debug\net9.0\Catalog.Domain.pdb
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\Catalog.Domain.csproj.AssemblyReference.cache
@@ -6,7 +6,8 @@ C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\Catalog.Domain.AssemblyInfoInputs.cache
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\Catalog.Domain.AssemblyInfo.cs
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\Catalog.Domain.csproj.CoreCompileInputs.cache
+C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\Catalog.Domain.sourcelink.json
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\Catalog.Domain.dll
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\refint\Catalog.Domain.dll
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\Catalog.Domain.pdb
-C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\ref\Catalog.Domain.dll
+c:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Domain\obj\Debug\net9.0\ref\Catalog.Domain.dll

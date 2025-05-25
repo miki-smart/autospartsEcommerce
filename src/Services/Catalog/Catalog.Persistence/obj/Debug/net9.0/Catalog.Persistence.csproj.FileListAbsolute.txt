@@ -11,6 +11,7 @@ C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Persistence\obj\D
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Persistence\obj\Debug\net9.0\Catalog.Persistence.AssemblyInfoInputs.cache
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Persistence\obj\Debug\net9.0\Catalog.Persistence.AssemblyInfo.cs
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Persistence\obj\Debug\net9.0\Catalog.Persistence.csproj.CoreCompileInputs.cache
+C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Persistence\obj\Debug\net9.0\Catalog.Persistence.sourcelink.json
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Persistence\obj\Debug\net9.0\Catalog..A00F9D8D.Up2Date
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Persistence\obj\Debug\net9.0\Catalog.Persistence.dll
 C:\Users\mikiy\autoparts-services\src\Services\Catalog\Catalog.Persistence\obj\Debug\net9.0\refint\Catalog.Persistence.dll

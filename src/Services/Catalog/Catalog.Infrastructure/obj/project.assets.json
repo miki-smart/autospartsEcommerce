@@ -293,7 +293,7 @@
           }
         }
       },
-      "RabbitMQ.Client/6.8.1": {
+      "RabbitMQ.Client/6.5.0": {
         "type": "package",
         "dependencies": {
           "System.Memory": "4.5.5",
@@ -372,7 +372,8 @@
           "Catalog.Domain": "1.0.0",
           "FluentValidation": "12.0.0",
           "MediatR": "12.5.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.5"
         },
         "compile": {
           "bin/placeholder/Catalog.Application.dll": {}
@@ -869,20 +870,19 @@
         "pipelines.sockets.unofficial.nuspec"
       ]
     },
-    "RabbitMQ.Client/6.8.1": {
-      "sha512": "jNsmGgmCNw2S/NzskeN2ijtGywtH4Sk/G6jWUTD5sY9SrC27Xz6BsLIiB8hdsfjeyWCa4j4GvCIGkpE8wrjU1Q==",
+    "RabbitMQ.Client/6.5.0": {
+      "sha512": "9hY5HiWPtCla1/l0WmXmLnqoX7iKE3neBQUWnetIJrRpOvTbO//XQfQDh++xgHCshL40Kv/6bR0HDkmJz46twg==",
       "type": "package",
-      "path": "rabbitmq.client/6.8.1",
+      "path": "rabbitmq.client/6.5.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "README.md",
         "icon.png",
-        "lib/net462/RabbitMQ.Client.dll",
-        "lib/net462/RabbitMQ.Client.xml",
+        "lib/net461/RabbitMQ.Client.dll",
+        "lib/net461/RabbitMQ.Client.xml",
         "lib/netstandard2.0/RabbitMQ.Client.dll",
         "lib/netstandard2.0/RabbitMQ.Client.xml",
-        "rabbitmq.client.6.8.1.nupkg.sha512",
+        "rabbitmq.client.6.5.0.nupkg.sha512",
         "rabbitmq.client.nuspec"
       ]
     },
@@ -1006,7 +1006,7 @@
       "Microsoft.Extensions.Hosting.Abstractions >= 9.0.5",
       "Microsoft.Extensions.Logging.Abstractions >= 9.0.5",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 9.0.5",
-      "RabbitMQ.Client >= 6.8.1"
+      "RabbitMQ.Client >= 6.5.0"
     ]
   },
   "packageFolders": {
@@ -1093,7 +1093,7 @@
           },
           "RabbitMQ.Client": {
             "target": "Package",
-            "version": "[6.8.1, )"
+            "version": "[6.5.0, )"
           }
         },
         "imports": [
