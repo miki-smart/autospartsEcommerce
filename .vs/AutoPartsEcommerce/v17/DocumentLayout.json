@@ -1,0 +1,235 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\mikiy\\autoparts-services\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.application\\categories\\commands\\createcategory\\createcategorycommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|solutionrelative:src\\services\\catalog\\catalog.application\\categories\\commands\\createcategory\\createcategorycommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.application\\categories\\commands\\createcategory\\createcategorycommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|solutionrelative:src\\services\\catalog\\catalog.application\\categories\\commands\\createcategory\\createcategorycommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.application\\common\\exceptions\\validationexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|solutionrelative:src\\services\\catalog\\catalog.application\\common\\exceptions\\validationexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.application\\common\\exceptions\\notfoundexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|solutionrelative:src\\services\\catalog\\catalog.application\\common\\exceptions\\notfoundexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.application\\common\\exceptions\\applicationexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|solutionrelative:src\\services\\catalog\\catalog.application\\common\\exceptions\\applicationexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|solutionrelative:src\\services\\catalog\\catalog.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.application\\categories\\commands\\createcategory\\createcategorycommandvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2A082F1-159D-4336-A75D-A20C4BDF2134}|src\\Services\\Catalog\\Catalog.Application\\Catalog.Application.csproj|solutionrelative:src\\services\\catalog\\catalog.application\\categories\\commands\\createcategory\\createcategorycommandvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F62E1C5-ADDC-4812-928A-0062C222FC15}|src\\Services\\Catalog\\Catalog.API\\Catalog.API.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.api\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F62E1C5-ADDC-4812-928A-0062C222FC15}|src\\Services\\Catalog\\Catalog.API\\Catalog.API.csproj|solutionrelative:src\\services\\catalog\\catalog.api\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F62E1C5-ADDC-4812-928A-0062C222FC15}|src\\Services\\Catalog\\Catalog.API\\Catalog.API.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F62E1C5-ADDC-4812-928A-0062C222FC15}|src\\Services\\Catalog\\Catalog.API\\Catalog.API.csproj|solutionrelative:src\\services\\catalog\\catalog.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{711308C1-048B-415F-A0F9-42B799AF810E}|src\\Services\\Catalog\\Catalog.Infrastructure\\Catalog.Infrastructure.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.infrastructure\\messagebus\\rabbitmqconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{711308C1-048B-415F-A0F9-42B799AF810E}|src\\Services\\Catalog\\Catalog.Infrastructure\\Catalog.Infrastructure.csproj|solutionrelative:src\\services\\catalog\\catalog.infrastructure\\messagebus\\rabbitmqconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{711308C1-048B-415F-A0F9-42B799AF810E}|src\\Services\\Catalog\\Catalog.Infrastructure\\Catalog.Infrastructure.csproj|c:\\users\\mikiy\\autoparts-services\\src\\services\\catalog\\catalog.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{711308C1-048B-415F-A0F9-42B799AF810E}|src\\Services\\Catalog\\Catalog.Infrastructure\\Catalog.Infrastructure.csproj|solutionrelative:src\\services\\catalog\\catalog.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d98f7c4d-b652-422c-bcdf-3d0e2b2da2c1}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CreateCategoryCommandHandler.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommandHandler.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommandHandler.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommandHandler.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommandHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:24:06.271Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CreateCategoryCommand.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommand.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommand.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommand.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:24:01.275Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ValidationException.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\ValidationException.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\ValidationException.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\ValidationException.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\ValidationException.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:17:05.127Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NotFoundException.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\NotFoundException.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\NotFoundException.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\NotFoundException.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\NotFoundException.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:17:01.971Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ApplicationException.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\ApplicationException.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\ApplicationException.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\ApplicationException.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Application\\Common\\Exceptions\\ApplicationException.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:16:56.966Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Application\\DependencyInjection.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\DependencyInjection.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Application\\DependencyInjection.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:15:04.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CreateCategoryCommandValidator.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommandValidator.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommandValidator.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommandValidator.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Application\\Categories\\Commands\\CreateCategory\\CreateCategoryCommandValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:13:44.49Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.API\\Program.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.API\\Program.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.API\\Program.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.API\\Program.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAEEAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:11:45.623Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "RabbitMQConsumer.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Infrastructure\\MessageBus\\RabbitMQConsumer.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Infrastructure\\MessageBus\\RabbitMQConsumer.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Infrastructure\\MessageBus\\RabbitMQConsumer.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Infrastructure\\MessageBus\\RabbitMQConsumer.cs",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAvwGUAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:05:21.37Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Infrastructure\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.Infrastructure\\DependencyInjection.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.Infrastructure\\DependencyInjection.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.Infrastructure\\DependencyInjection.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAAABwAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:05:05.695Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CategoriesController.cs",
+              "DocumentMoniker": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.API\\Controllers\\CategoriesController.cs",
+              "RelativeDocumentMoniker": "src\\Services\\Catalog\\Catalog.API\\Controllers\\CategoriesController.cs",
+              "ToolTip": "C:\\Users\\mikiy\\autoparts-services\\src\\Services\\Catalog\\Catalog.API\\Controllers\\CategoriesController.cs",
+              "RelativeToolTip": "src\\Services\\Catalog\\Catalog.API\\Controllers\\CategoriesController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T17:04:32.441Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
