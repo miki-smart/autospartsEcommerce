@@ -1,0 +1,96 @@
+# .NET Core/.NET specific
+*.swp
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.tmp
+*.log
+*.vs
+*.vscode
+*.idea
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# Visual Studio files
+.vs/
+.vscode/
+*.nupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# Entity Framework Core
+# Migrations/
+
+# User-specific files
+*.rsuser
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+
+# Local development settings
+appsettings.Development.local.json
+*.Development.local.json
+launchSettings.json
+
+# Rider
+.idea/
+*.sln.iml
+
+# Log files
+*.log
+logs/
+Log/
+Logs/
+
+# Local datastore folders
+.docker/data/
+
+# OS generated files
+.DS_Store*
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+[Tt]humbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+
+# Visual Studio for Mac
+.idea/
+
+# User secrets
+*.usersecrets
+
+# Ignore Redis snapshot db
+*.rdb
+
+# Ignore Docker volume data
+data/
+Debug/
+bin/
+obj/
