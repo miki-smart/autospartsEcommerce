@@ -18,19 +18,28 @@ namespace Catalog.Infrastructure
             {
                 options.Configuration = configuration.GetValue<string>("CacheSettings:ConnectionString");
                 options.InstanceName = configuration.GetValue<string>("CacheSettings:InstanceName");
-            });
-            services.AddScoped<ICacheService, RedisCacheService>();
+            });            services.AddScoped<ICacheService, RedisCacheService>();
 
-            // Configure RabbitMQ messaging
-            services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQSettings"));
-            services.AddSingleton<RabbitMQConsumer>(sp =>
+            // Configure messaging - use RabbitMQ if enabled, otherwise use no-op implementation
+            var useRabbitMQ = configuration.GetValue<bool>("UseRabbitMQ", false);
+            
+            if (useRabbitMQ)
             {
-                var settings = configuration.GetSection("RabbitMQSettings").Get<RabbitMQSettings>();
-                var logger = sp.GetRequiredService<ILogger<RabbitMQConsumer>>();
-                return new RabbitMQConsumer(settings, logger, sp);
-            });
-            services.AddScoped<IEventBus, RabbitMQEventBus>();
-            services.AddHostedService<EventBusHostedService>();
+                services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQ"));
+                services.AddSingleton<RabbitMQConsumer>(sp =>
+                {
+                    var settings = configuration.GetSection("RabbitMQ").Get<RabbitMQSettings>();
+                    var logger = sp.GetRequiredService<ILogger<RabbitMQConsumer>>();
+                    return new RabbitMQConsumer(settings!, logger, sp);
+                });
+                services.AddScoped<IEventBus, RabbitMQEventBus>();
+                services.AddHostedService<EventBusHostedService>();
+            }
+            else
+            {
+                // Use no-op event bus for local development
+                services.AddScoped<IEventBus, NoOpEventBus>();
+            }
 
             return services;
         }
