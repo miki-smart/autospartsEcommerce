@@ -1,5 +1,7 @@
 using Identity.Domain.Entities;
+using Identity.Domain.Repositories;
 using Identity.Persistence.Context;
+using Identity.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,9 +35,15 @@ public static class DependencyInjection
             // User settings
             options.User.RequireUniqueEmail = true;
             options.SignIn.RequireConfirmedEmail = false;
-        })
-        .AddEntityFrameworkStores<ApplicationDbContext>()
-        .AddDefaultTokenProviders();
+        })        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();        
+        
+        // Register repositories
+        services.AddScoped<IPermissionRepository, PermissionRepository>();
+        services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+        services.AddScoped<ITwoFactorTokenRepository, TwoFactorTokenRepository>();
+        services.AddScoped<IDeviceRepository, DeviceRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         return services;
     }
