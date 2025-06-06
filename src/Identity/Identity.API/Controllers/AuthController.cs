@@ -223,6 +223,66 @@ public class AuthController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Initiates password reset by sending a reset link to the user's email
+    /// </summary>
+    /// <param name="forgotPasswordDto">Forgot password request</param>
+    /// <returns>Status of the request</returns>
+    [HttpPost("forgot-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 400)]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+    {
+        try
+        {
+            var command = new ForgotPasswordCommand
+            {
+                Email = forgotPasswordDto.Email
+            };
+            var result = await _mediator.Send(command);
+            if (!result.Success)
+                return BadRequest(result);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during forgot password");
+            return StatusCode(500, new ApiResponse<bool>("Internal server error"));
+        }
+    }
+
+    /// <summary>
+    /// Resets the user's password using a valid reset token
+    /// </summary>
+    /// <param name="confirmResetPasswordDto">Reset password request</param>
+    /// <returns>Status of the request</returns>
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 400)]
+    public async Task<IActionResult> ResetPassword([FromBody] ConfirmResetPasswordDto confirmResetPasswordDto)
+    {
+        try
+        {
+            var command = new ConfirmResetPasswordCommand
+            {
+                Email = confirmResetPasswordDto.Email,
+                Token = confirmResetPasswordDto.Token,
+                NewPassword = confirmResetPasswordDto.NewPassword
+            };
+            var result = await _mediator.Send(command);
+            if (!result.Success)
+                return BadRequest(result);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during reset password");
+            return StatusCode(500, new ApiResponse<bool>("Internal server error"));
+        }
+    }
+
     #region Private Helper Methods
 
     private string GetClientIpAddress()

@@ -83,3 +83,8 @@ public class RegisterCommand : IRequest<ApiResponse<LoginResponseDto>>
     public string? OS { get; set; }
     public bool AcceptTerms { get; set; } = false;
 }
+
+public class ForgotPasswordCommand : IRequest<ApiResponse<bool>>
+{
+    public string Email { get; set; } = string.Empty;
+}

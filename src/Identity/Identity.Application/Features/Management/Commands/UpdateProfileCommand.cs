@@ -12,5 +12,6 @@ namespace Identity.Application.Features.Management.Commands
         public string? TimeZone { get; set; }
         public bool? EmailNotifications { get; set; }
         public bool? SmsNotifications { get; set; }
+        public string? ProfilePicture { get; set; }
     }
 }

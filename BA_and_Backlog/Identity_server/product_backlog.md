@@ -1,5 +1,56 @@
 # Product Backlog for Identity Server
 
+## MVP Scope: Authentication & User Management
+
+- **As a user, I want to register with email and password, so I can create an account.**
+  - Acceptance Criteria:
+    - Registration form validates email and password strength
+    - User receives confirmation email
+    - User cannot log in until email is confirmed
+
+- **As a user, I want to log in with my credentials, so I can access my account.**
+  - Acceptance Criteria:
+    - Login form validates credentials
+    - User receives JWT or session token on success
+    - Failed logins are rate-limited
+
+- **As a user, I want to reset my password via email, so I can recover access if I forget it.**
+  - Acceptance Criteria:
+    - Password reset link sent to email
+    - Link expires after a set time
+
+- **As a user, I want to update my profile and change my password, so my information is current.**
+  - Acceptance Criteria:
+    - User can update profile fields
+    - User can change password with current password verification
+
+- **As a user, I want to see my login history, so I can detect suspicious activity.**
+  - Acceptance Criteria:
+    - User can view recent logins with timestamp and IP
+
+- **As an admin, I want to view and manage all users, so I can maintain the user base.**
+  - Acceptance Criteria:
+    - Admin can search, filter, and paginate users
+    - Admin can view user details and status
+
+- **As an admin, I want to activate, deactivate, or lock user accounts, so I can control access.**
+  - Acceptance Criteria:
+    - Admin can change user status
+    - Locked users cannot log in
+
+---
+
+## Out of MVP (Future Epics)
+
+- Social login (Google, Facebook)
+- Two-factor authentication (2FA)
+- Role and permission management
+- Security & compliance (audit logs, encryption, GDPR, PCI DSS)
+- Integration & extensibility (OAuth2/OIDC, SAML, webhooks, custom attributes, API docs)
+- Operations & monitoring (health checks, logging, backup/restore)
+
+---
+
 ## Epic: Authentication & User Management
 
 - **As a user, I want to register with email and password, so I can create an account.**

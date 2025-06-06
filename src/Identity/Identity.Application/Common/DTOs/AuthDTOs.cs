@@ -71,3 +71,20 @@ public class RegisterDto
     public string? IpAddress { get; set; }
     public string? UserAgent { get; set; }
 }
+
+public class ForgotPasswordDto
+{
+    public string Email { get; set; } = string.Empty;
+}
+
+public class UpdateProfileDto
+{
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
+    public string? PreferredLanguage { get; set; }
+    public string? TimeZone { get; set; }
+    public bool? EmailNotifications { get; set; }
+    public bool? SmsNotifications { get; set; }
+    public string? ProfilePicture { get; set; }
+}

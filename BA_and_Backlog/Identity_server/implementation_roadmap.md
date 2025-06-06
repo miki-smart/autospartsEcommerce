@@ -26,26 +26,26 @@
    - ✅ Clean Architecture pattern implementation
    - ✅ Device tracking integration
    - ✅ Email validation, password strength
-   - [ ] API endpoint: `POST /api/auth/register`
+   - ✅ API endpoint: `POST /api/auth/register`
    - [ ] Account confirmation flow
 
 2. ✅ **User Login** - **HANDLER READY** 
    - ✅ LoginCommandHandler (follows same pattern)
    - ✅ JWT token generation
    - ✅ Device tracking and security
-   - [ ] API endpoint: `POST /api/auth/login`
+   - ✅ API endpoint: `POST /api/auth/login`
    - [ ] Rate limiting implementation
 
 3. ✅ **Password Reset** - **HANDLER READY**
    - ✅ Command handlers implemented
-   - [ ] API endpoints: `POST /api/auth/forgot-password`, `POST /api/auth/reset-password`
+   - ✅ API endpoints: `POST /api/auth/forgot-password`, `POST /api/auth/reset-password`
    - [ ] Email token generation and validation
 
 **Technical Tasks:**
 - ✅ Clean Architecture compliance (RegisterCommandHandler)
 - ✅ Device tracking service integration
 - ✅ JWT token service implementation
-- [ ] **NEXT UP**: Create `AuthController` with registration/login endpoints
+- ✅ **NEXT UP**: Create `AuthController` with registration/login endpoints
 - [ ] Add email service for confirmations
 - [ ] Add password validation rules
 - [ ] Implement rate limiting middleware

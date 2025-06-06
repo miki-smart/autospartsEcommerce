@@ -51,6 +51,9 @@ namespace Identity.Application.Features.Management.Commands
         public UpdateProfileCommandValidator()
         {
             RuleFor(x => x.Email).EmailAddress().When(x => !string.IsNullOrEmpty(x.Email));
+            RuleFor(x => x.ProfilePicture)
+                .MaximumLength(255).WithMessage("Profile picture URL cannot exceed 255 characters")
+                .When(x => !string.IsNullOrEmpty(x.ProfilePicture));
         }
     }
 }

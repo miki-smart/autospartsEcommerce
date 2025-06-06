@@ -4,6 +4,7 @@ using Identity.Persistence;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
+using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +94,12 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
+// Add rate limiting configuration
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -113,6 +120,9 @@ app.UseStaticFiles();
 
 // CORS must come before IdentityServer
 app.UseCors("AllowWebApp");
+
+// Enable rate limiting middleware
+app.UseIpRateLimiting();
 
 // IdentityServer middleware - handles OAuth2/OIDC endpoints
 app.UseIdentityServer();

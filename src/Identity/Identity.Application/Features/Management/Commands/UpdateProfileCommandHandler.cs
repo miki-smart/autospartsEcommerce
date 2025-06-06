@@ -42,6 +42,8 @@ namespace Identity.Application.Features.Management.Commands
                 user.EmailNotifications = request.EmailNotifications.Value;
             if (request.SmsNotifications.HasValue) 
                 user.SmsNotifications = request.SmsNotifications.Value;
+            if (!string.IsNullOrEmpty(request.ProfilePicture))
+                user.ProfilePicture = request.ProfilePicture;
                 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
