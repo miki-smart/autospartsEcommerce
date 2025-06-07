@@ -132,7 +132,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // MVC endpoints for login/logout UI
-app.MapDefaultControllerRoute();
+app.MapControllers();
 
 // Health check endpoint
 app.MapHealthChecks("/health");

@@ -51,11 +51,11 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<Log
                 return new ApiResponse<LoginResponseDto>("Account is inactive");
             }
 
-            if (!user.EmailConfirmed)
-            {
-                _logger.LogWarning("Login failed - email not confirmed: {UserId}", user.Id);
-                return new ApiResponse<LoginResponseDto>("Email not confirmed");
-            }
+            // if (!user.EmailConfirmed)
+            // {
+            //     _logger.LogWarning("Login failed - email not confirmed: {UserId}", user.Id);
+            //     return new ApiResponse<LoginResponseDto>("Email not confirmed");
+            // }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
 
