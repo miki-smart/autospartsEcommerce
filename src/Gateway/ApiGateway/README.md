@@ -1,12 +1,47 @@
 # ApiGateway
 
-The API Gateway routes and secures traffic to all backend microservices in the AutoParts Ecommerce platform.
+The API Gateway is a robust, scalable, and configurable routing solution for the AutoParts Ecommerce platform's microservices architecture. Built with Ocelot and enhanced with enterprise-grade features for production use.
 
 ## Features
-- Centralized routing for all APIs (Orders, Catalog, Basket, Payment, Notification, Search, etc.)
-- JWT authentication/authorization (integrates with IdentityServer)
-- Request/response transformation
-- Service discovery (if enabled)
+
+### Core Routing & Service Discovery
+- **Ocelot-based routing** with comprehensive configuration for all backend microservices
+- **Consul service discovery** for dynamic service registration and health monitoring
+- **Load balancing** with multiple algorithms (Round Robin, Least Connection, etc.)
+- **Circuit breaking** with Polly for resilience and fault tolerance
+
+### Security & Authentication
+- **JWT authentication/authorization** with configurable validation
+- **CORS policy** management with configurable allowed origins
+- **IP-based rate limiting** to prevent abuse and ensure fair usage
+
+### Monitoring & Observability
+- **Custom Correlation ID middleware** for distributed tracing across microservices
+- **Centralized logging** with Serilog (Console, File, and Seq sinks)
+- **Comprehensive health checks** for all services and dependencies
+- **Health Checks UI** with real-time monitoring dashboard
+
+### Performance & Reliability
+- **Rate limiting** with memory-based storage
+- **Circuit breaker patterns** for service resilience
+- **Request/response transformation** capabilities
+
+## Custom Correlation ID Middleware
+
+The API Gateway includes a custom-built correlation ID middleware that replaces the third-party `CorrelationId` package. This provides:
+
+- **Automatic correlation ID generation** for all incoming requests
+- **Header propagation** - forwards existing correlation IDs from upstream services
+- **Serilog integration** - automatically includes correlation ID in all log entries
+- **HTTP response headers** - returns correlation ID to clients for tracking
+- **HttpContext extension methods** - easy access to correlation ID throughout the request pipeline
+
+### How It Works
+1. **Incoming Request**: Checks for existing `X-Correlation-ID` header
+2. **ID Generation**: Creates new correlation ID if none exists (12-character format)
+3. **Context Storage**: Stores ID in `HttpContext.Items` for pipeline access
+4. **Response Headers**: Adds correlation ID to response headers
+5. **Logging Context**: Pushes correlation ID to Serilog context for automatic inclusion in logs
 
 ## How to Run
 

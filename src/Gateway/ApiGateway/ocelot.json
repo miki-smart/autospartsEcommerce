@@ -1,0 +1,100 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/identity/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "IdentityApi",
+      "LoadBalancerOptions": { "Type": "LeastConnection" },
+      "RateLimitOptions": { "EnableRateLimiting": true, "Period": "1s", "Limit": 10 },
+      "QoSOptions": { "ExceptionsAllowedBeforeBreaking": 3, "DurationOfBreak": 30000, "TimeoutValue": 10000 },
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "UpstreamPathTemplate": "/api/catalog/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/health",
+      "DownstreamScheme": "http",
+      "ServiceName": "ProductCatalogApi",
+      "LoadBalancerOptions": { "Type": "LeastConnection" },
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "UpstreamPathTemplate": "/api/catalog/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "ProductCatalogApi",
+      "LoadBalancerOptions": { "Type": "LeastConnection" },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RateLimitOptions": { "EnableRateLimiting": true, "Period": "1s", "Limit": 10 },
+      "QoSOptions": { "ExceptionsAllowedBeforeBreaking": 3, "DurationOfBreak": 30000, "TimeoutValue": 10000 },
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/health",
+      "DownstreamScheme": "http",
+      "ServiceName": "OrderApi",
+      "LoadBalancerOptions": { "Type": "LeastConnection" },
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "OrderApi",
+      "LoadBalancerOptions": { "Type": "LeastConnection" },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RateLimitOptions": { "EnableRateLimiting": true, "Period": "1s", "Limit": 10 },
+      "QoSOptions": { "ExceptionsAllowedBeforeBreaking": 3, "DurationOfBreak": 30000, "TimeoutValue": 10000 },
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:7000",
+    "ServiceDiscoveryProvider": {
+      "Host": "consul",
+      "Port": 8500,
+      "Type": "Consul"
+    },
+    "RateLimitOptions": {
+      "ClientIdHeader": "X-ClientId",
+      "HttpStatusCode": 429,
+      "QuotaExceededMessage": "Rate limit exceeded. Please try again later.",
+      "DisableRateLimitHeaders": false,
+      "EnableRateLimiting": true
+    },
+    "DownstreamScheme": "http",
+    "HttpHandlerOptions": {
+        "AllowAutoRedirect": false,
+        "UseCookieContainer": false,
+        "UseTracing": true,
+        "MaxConnectionsPerServer": 100
+    },
+    "LoadBalancerOptions": {
+        "Type": "LeastConnection",
+        "Key": null,
+        "Expiry": 0
+    },
+    "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 30000,
+        "TimeoutValue": 15000
+    }
+  }
+}
