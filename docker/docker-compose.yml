@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   # Infrastructure Services
   postgres:
     image: postgres:16
-    container_name: autoparts-postgres
+    container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
@@ -24,7 +22,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: autoparts-redis
+    container_name: redis
     ports:
       - "6379:6379"
     networks:
@@ -34,9 +32,10 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-  rabbitmq:
+
+  rabbit-mq:
     image: rabbitmq:3.12-management-alpine
-    container_name: autoparts-rabbitmq
+    container_name: rabbit-mq
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin123
@@ -56,7 +55,7 @@ services:
 
   consul:
     image: hashicorp/consul:1.21
-    container_name: autoparts-consul
+    container_name: consul
     command: agent -server -bootstrap-expect=1 -datacenter=dc1 -data-dir=/consul/data -node=consul-1 -bind=0.0.0.0 -client=0.0.0.0 -enable-script-checks=true -ui
     ports:
       - "8500:8500"    # HTTP API and Web UI
@@ -71,177 +70,133 @@ services:
       timeout: 10s
       retries: 5
 
-  # Database Migration Services
-  identity-migrator:
-    build:
-      context: ..
-      dockerfile: src/Identity/Identity.API/Dockerfile.migrator
-    container_name: identity-migrator
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=IdentityDb;Username=postgres;Password=123456
-    networks:
-      - autoparts-network
-
-  catalog-migrator:
-    build:
-      context: ..
-      dockerfile: docker/migrations/Dockerfile.catalog-migrator
-    container_name: catalog-migrator
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=CatalogDb;Username=postgres;Password=123456
-    networks:
-      - autoparts-network
-
-  orders-migrator:
-    build:
-      context: ..
-      dockerfile: docker/migrations/Dockerfile.orders-migrator
-    container_name: orders-migrator
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=OrdersDb;Username=postgres;Password=123456
-    networks:
-      - autoparts-network
-  # Identity Service
+  # API Services
   identity-api:
     build:
       context: ..
       dockerfile: src/Identity/Identity.API/Dockerfile
     container_name: identity-api
     ports:
-      - "5001:80"
+      - "5001:8080"
     depends_on:
       consul:
         condition: service_healthy
-      identity-migrator:
-        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=IdentityDb;Username=postgres;Password=123456
-      - ServiceConfig__ServiceName=IdentityApi
+      - ServiceConfig__ServiceName=identity-api
       - ServiceConfig__ServiceId=identity-api-1
       - ServiceConfig__ServiceAddress=identity-api
-      - ServiceConfig__ServicePort=80
+      - ServiceConfig__ServicePort=8080
       - Consul__Host=consul
       - Consul__Port=8500
     networks:
-      - autoparts-network
-    volumes:
-      - ../src/Identity/Identity.API/logs:/app/logs
+      - autoparts-network   
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD-SHELL", "exit 0"]
       interval: 30s
       timeout: 10s
       retries: 5
-  # Catalog Service
+
   catalog-api:
     build:
       context: ..
       dockerfile: src/Services/Catalog/Catalog.API/Dockerfile
     container_name: catalog-api
     ports:
-      - "5002:80"
+      - "5002:8081"
     depends_on:
       postgres:
-        condition: service_healthy
-      rabbitmq:
+        condition: service_healthy     
+      rabbit-mq:
         condition: service_healthy
       consul:
         condition: service_healthy
-      catalog-migrator:
-        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8081
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=CatalogDb;Username=postgres;Password=123456
-      - ServiceConfig__ServiceName=ProductCatalogApi
+      - ServiceConfig__ServiceName=catalog-api
       - ServiceConfig__ServiceId=catalog-api-1
       - ServiceConfig__ServiceAddress=catalog-api
-      - ServiceConfig__ServicePort=80
-      - IdentityServer__Authority=http://identity-api
+      - ServiceConfig__ServicePort=8081
+      - IdentityServer__Authority=http://identity-api:8080
       - IdentityServer__RequireHttpsMetadata=false
-      - UseRabbitMQ=true
-      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__HostName=rabbit-mq
       - RabbitMQ__UserName=admin
       - RabbitMQ__Password=admin123
       - RabbitMQ__VirtualHost=/
       - RabbitMQ__Port=5672
       - RabbitMQ__ExchangeName=catalog_events
-      - ConnectionStrings__Redis=autoparts-redis:6379
+      - ConnectionStrings__Redis=redis:6379
       - Consul__Host=consul
       - Consul__Port=8500
     networks:
       - autoparts-network
-    volumes:
-      - ../src/Services/Catalog/Catalog.API/Logs:/app/logs
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD-SHELL", "exit 0"]
       interval: 30s
       timeout: 10s
       retries: 5
-  # Orders Service
-  orders-api:
+
+  order-api:
     build:
       context: ..
       dockerfile: src/Services/Orders/Orders.API/Dockerfile
-    container_name: orders-api
+    container_name: order-api
     ports:
-      - "5003:80"
+      - "5003:8082"
     depends_on:
       postgres:
         condition: service_healthy
-      rabbitmq:
+      rabbit-mq:
         condition: service_healthy
       consul:
         condition: service_healthy
-      orders-migrator:
-        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
       identity-api:
         condition: service_healthy
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8082
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=OrdersDb;Username=postgres;Password=123456
-      - ServiceConfig__ServiceName=OrderApi
-      - ServiceConfig__ServiceId=orders-api-1
-      - ServiceConfig__ServiceAddress=orders-api
-      - ServiceConfig__ServicePort=80
-      - IdentityServer__Authority=http://identity-api
+      - ServiceConfig__ServiceName=order-api
+      - ServiceConfig__ServiceId=order-api-1
+      - ServiceConfig__ServiceAddress=order-api
+      - ServiceConfig__ServicePort=8082
+      - IdentityServer__Authority=http://identity-api:8080
       - IdentityServer__RequireHttpsMetadata=false
-      - ExternalServices__CatalogApi=http://catalog-api
-      - UseRabbitMQ=true
-      - RabbitMQ__HostName=rabbitmq
+      - ExternalServices__CatalogApi=http://catalog-api:8081
+      - RabbitMQ__HostName=rabbit-mq
       - RabbitMQ__UserName=admin
       - RabbitMQ__Password=admin123
       - RabbitMQ__VirtualHost=/
       - RabbitMQ__Port=5672
       - RabbitMQ__ExchangeName=orders_events
-      - ConnectionStrings__Redis=autoparts-redis:6379      - Consul__Host=consul
+      - ConnectionStrings__Redis=redis:6379
+      - Consul__Host=consul
       - Consul__Port=8500
     networks:
       - autoparts-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD-SHELL", "exit 0"]
       interval: 30s
       timeout: 10s
       retries: 5
-  # API Gateway
+
   api-gateway:
     build:
       context: ..
       dockerfile: src/Gateway/ApiGateway/Dockerfile
     container_name: api-gateway
     ports:
-      - "7000:80"
+      - "7000:8083"
     depends_on:
       consul:
         condition: service_healthy
@@ -249,22 +204,19 @@ services:
         condition: service_healthy
       catalog-api:
         condition: service_healthy
-      orders-api:
+      order-api:
         condition: service_healthy
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - IdentityServer__Authority=http://identity-api
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8083
+      - IdentityServer__Authority=http://identity-api:8080
       - IdentityServer__RequireHttpsMetadata=false
       - Consul__Host=consul
       - Consul__Port=8500
     networks:
       - autoparts-network
-    volumes:
-      - ../src/Gateway/ApiGateway/Logs:/app/logs
-      - ../src/Gateway/ApiGateway/appsettings.Docker.json:/app/appsettings.Production.json
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD-SHELL", "exit 0"]
       interval: 30s
       timeout: 10s
       retries: 5

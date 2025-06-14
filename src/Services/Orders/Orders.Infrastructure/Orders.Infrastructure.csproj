@@ -1,8 +1,10 @@
-﻿<Project Sdk="Mi  <PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>ft.NET.Sdk">
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Orders.Application\Orders.Application.csproj" />

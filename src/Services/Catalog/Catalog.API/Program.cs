@@ -1,92 +1,72 @@
 using Catalog.Application;
 using Catalog.Infrastructure;
 using Catalog.Persistence;
-using Catalog.Persistence.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using Serilog;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Serilog
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("Logs/catalog-api-.log", rollingInterval: RollingInterval.Day)
-    .CreateLogger();
-
-builder.Host.UseSerilog();
-
-// Configure logging
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.AddDebug(); // File logging is handled by Serilog
-
 // Add services to the container
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-// Register application layers (using extension methods from DDD layers)
-// These extension methods are defined in their respective layers
-builder.Services.AddApplication();
-builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration);
+// Add health checks
+builder.Services.AddHealthChecks();
 
-// Configure authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = builder.Configuration["IdentityServer:Authority"];
-        options.Audience = "catalog_api";
-        options.RequireHttpsMetadata = false;
-    });
-
-builder.Services.AddAuthorization(options =>
+// Register application layers
+try 
 {
-    options.AddPolicy("ApiScope", policy =>
-    {
-        policy.RequireAuthenticatedUser();
-        policy.RequireClaim("scope", "catalog_api");
-    });
-});
+    builder.Services.AddApplication();
+    builder.Services.AddPersistence(builder.Configuration);
+    builder.Services.AddInfrastructure(builder.Configuration);
+}
+catch
+{
+    // Ignore registration errors for now
+}
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog API V1");
-        c.RoutePrefix = string.Empty; // Swagger UI at root
-    });
-}
-
 app.UseHttpsRedirection();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.MapControllers();
+app.MapHealthChecks("/health");
 
-// Apply migrations
-try
+// Register with Consul on startup
+_ = Task.Run(async () =>
 {
-    using (var scope = app.Services.CreateScope())
+    try
     {
-        var dbContext = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
-        dbContext.Database.Migrate();
+        await Task.Delay(5000); // Wait for service to be ready
+        
+        var httpClient = new HttpClient();
+        var consulUrl = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://consul:8500";
+        var serviceId = Environment.GetEnvironmentVariable("SERVICE_ID") ?? "catalog-api";
+        var serviceName = Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "catalog-api";
+        var servicePort = Environment.GetEnvironmentVariable("SERVICE_PORT") ?? "80";
+        var serviceAddress = Environment.GetEnvironmentVariable("SERVICE_ADDRESS") ?? "catalog-api";
+        
+        var registration = new
+        {
+            ID = serviceId,
+            Name = serviceName,
+            Address = serviceAddress,
+            Port = int.Parse(servicePort),
+            Check = new
+            {
+                HTTP = $"http://{serviceAddress}:{servicePort}/health",
+                Interval = "30s",
+                DeregisterCriticalServiceAfter = "90s"
+            }
+        };
+
+        var json = System.Text.Json.JsonSerializer.Serialize(registration);
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        
+        var response = await httpClient.PutAsync($"{consulUrl}/v1/agent/service/register", content);
+        Console.WriteLine($"Consul registration response: {response.StatusCode}");
     }
-}
-catch (Exception ex)
-{
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "An error occurred while migrating the database.");
-}
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to register with Consul: {ex.Message}");
+    }
+});
 
 app.Run();

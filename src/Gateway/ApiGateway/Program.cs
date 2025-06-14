@@ -142,7 +142,6 @@ if (!string.IsNullOrWhiteSpace(consulHostUrlString))
 
 builder.Services.AddHealthChecksUI(setupSettings: setup =>
 {
-    setup.AddHealthCheckEndpoint("API Gateway Health", "/health");
     setup.SetEvaluationTimeInSeconds(builder.Configuration.GetValue<int>("HealthChecksUISettings:EvaluationTimeInSeconds", 10));
     setup.SetMinimumSecondsBetweenFailureNotifications(builder.Configuration.GetValue<int>("HealthChecksUISettings:MinimumSecondsBetweenFailureNotifications", 60));
 }).AddInMemoryStorage();
