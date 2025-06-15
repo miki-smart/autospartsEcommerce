@@ -1,0 +1,177 @@
+version: '3.8'
+
+services:
+  # Infrastructure Services
+  postgres:
+    image: postgres:15
+    container_name: autoparts-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: AutoPartsDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: autoparts-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Identity Service
+  identity-migrator:
+    build:
+      context: .
+      dockerfile: src/Identity/Identity.API/Dockerfile.migrator
+    container_name: identity-migrator
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=IdentityDb;Username=postgres;Password=123456
+    networks:
+      - autoparts-network
+
+  identity-api:
+    build:
+      context: .
+      dockerfile: src/Identity/Identity.API/Dockerfile
+    container_name: identity-api
+    ports:
+      - "5001:80"
+    depends_on:
+      - identity-migrator
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=IdentityDb;Username=postgres;Password=123456
+      - ServiceConfig__ServiceName=IdentityApi
+      - ServiceConfig__ServiceId=identity-api-1
+      - ServiceConfig__ServiceAddress=identity-api
+      - ServiceConfig__ServicePort=80
+    networks:
+      - autoparts-network
+    volumes:
+      - ./src/Identity/Identity.API/logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Catalog Service
+  catalog-api:
+    build:
+      context: .
+      dockerfile: src/Services/Catalog/Catalog.API/Dockerfile
+    container_name: catalog-api
+    ports:
+      - "5002:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=CatalogDb;Username=postgres;Password=123456
+      - ServiceConfig__ServiceName=ProductCatalogApi
+      - ServiceConfig__ServiceId=catalog-api-1
+      - ServiceConfig__ServiceAddress=catalog-api
+      - ServiceConfig__ServicePort=80
+      - IdentityServer__Authority=http://identity-api
+      - IdentityServer__RequireHttpsMetadata=false
+    networks:
+      - autoparts-network
+    volumes:
+      - ./src/Services/Catalog/Catalog.API/Logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Orders Service
+  orders-api:
+    build:
+      context: .
+      dockerfile: src/Services/Orders/Orders.API/Dockerfile
+    container_name: orders-api
+    ports:
+      - "5003:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      identity-api:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=OrdersDb;Username=postgres;Password=123456
+      - ServiceConfig__ServiceName=OrderApi
+      - ServiceConfig__ServiceId=orders-api-1
+      - ServiceConfig__ServiceAddress=orders-api
+      - ServiceConfig__ServicePort=80
+      - IdentityServer__Authority=http://identity-api
+      - IdentityServer__RequireHttpsMetadata=false
+      - ExternalServices__CatalogApi=http://catalog-api
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: src/Gateway/ApiGateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "7000:80"
+    depends_on:
+      identity-api:
+        condition: service_healthy
+      catalog-api:
+        condition: service_healthy
+      orders-api:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityServer__Authority=http://identity-api
+      - IdentityServer__RequireHttpsMetadata=false
+    networks:
+      - autoparts-network
+    volumes:
+      - ./src/Gateway/ApiGateway/Logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  autoparts-network:
+    driver: bridge

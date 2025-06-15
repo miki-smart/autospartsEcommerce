@@ -1,0 +1,28 @@
+services:
+  # Override to remove migrator dependencies for now
+  identity-api:
+    depends_on:
+      consul:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  catalog-api:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+
+  orders-api:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      identity-api:
+        condition: service_healthy

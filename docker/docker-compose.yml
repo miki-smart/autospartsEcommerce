@@ -1,0 +1,231 @@
+services:
+  # Infrastructure Services
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: AutoPartsDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../scripts/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  rabbit-mq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: rabbit-mq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+      RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "5672:5672"    # AMQP port
+      - "15672:15672"  # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  consul:
+    image: hashicorp/consul:1.21
+    container_name: consul
+    command: agent -server -bootstrap-expect=1 -datacenter=dc1 -data-dir=/consul/data -node=consul-1 -bind=0.0.0.0 -client=0.0.0.0 -enable-script-checks=true -ui
+    ports:
+      - "8500:8500"    # HTTP API and Web UI
+      - "8600:8600/udp" # DNS
+    volumes:
+      - consul_data:/consul/data
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8500/v1/status/leader"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # API Services
+  identity-api:
+    build:
+      context: ..
+      dockerfile: src/Identity/Identity.API/Dockerfile
+    container_name: identity-api
+    ports:
+      - "5001:8080"
+    depends_on:
+      consul:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=IdentityDb;Username=postgres;Password=123456
+      - ServiceConfig__ServiceName=identity-api
+      - ServiceConfig__ServiceId=identity-api-1
+      - ServiceConfig__ServiceAddress=identity-api
+      - ServiceConfig__ServicePort=8080
+      - Consul__Host=consul
+      - Consul__Port=8500
+    networks:
+      - autoparts-network   
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  catalog-api:
+    build:
+      context: ..
+      dockerfile: src/Services/Catalog/Catalog.API/Dockerfile
+    container_name: catalog-api
+    ports:
+      - "5002:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy     
+      rabbit-mq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8081
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=CatalogDb;Username=postgres;Password=123456
+      - ServiceConfig__ServiceName=catalog-api
+      - ServiceConfig__ServiceId=catalog-api-1
+      - ServiceConfig__ServiceAddress=catalog-api
+      - ServiceConfig__ServicePort=8081
+      - IdentityServer__Authority=http://identity-api:8080
+      - IdentityServer__RequireHttpsMetadata=false
+      - RabbitMQ__HostName=rabbit-mq
+      - RabbitMQ__UserName=admin
+      - RabbitMQ__Password=admin123
+      - RabbitMQ__VirtualHost=/
+      - RabbitMQ__Port=5672
+      - RabbitMQ__ExchangeName=catalog_events
+      - ConnectionStrings__Redis=redis:6379
+      - Consul__Host=consul
+      - Consul__Port=8500
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  order-api:
+    build:
+      context: ..
+      dockerfile: src/Services/Orders/Orders.API/Dockerfile
+    container_name: order-api
+    ports:
+      - "5003:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbit-mq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      identity-api:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8082
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=OrdersDb;Username=postgres;Password=123456
+      - ServiceConfig__ServiceName=order-api
+      - ServiceConfig__ServiceId=order-api-1
+      - ServiceConfig__ServiceAddress=order-api
+      - ServiceConfig__ServicePort=8082
+      - IdentityServer__Authority=http://identity-api:8080
+      - IdentityServer__RequireHttpsMetadata=false
+      - ExternalServices__CatalogApi=http://catalog-api:8081
+      - RabbitMQ__HostName=rabbit-mq
+      - RabbitMQ__UserName=admin
+      - RabbitMQ__Password=admin123
+      - RabbitMQ__VirtualHost=/
+      - RabbitMQ__Port=5672
+      - RabbitMQ__ExchangeName=orders_events
+      - ConnectionStrings__Redis=redis:6379
+      - Consul__Host=consul
+      - Consul__Port=8500
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  api-gateway:
+    build:
+      context: ..
+      dockerfile: src/Gateway/ApiGateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "7000:8083"
+    depends_on:
+      consul:
+        condition: service_healthy
+      identity-api:
+        condition: service_healthy
+      catalog-api:
+        condition: service_healthy
+      order-api:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8083
+      - IdentityServer__Authority=http://identity-api:8080
+      - IdentityServer__RequireHttpsMetadata=false
+      - Consul__Host=consul
+      - Consul__Port=8500
+    networks:
+      - autoparts-network
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  consul_data:
+
+networks:
+  autoparts-network:
+    driver: bridge

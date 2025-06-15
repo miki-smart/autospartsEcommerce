@@ -9,10 +9,18 @@ namespace Identity.Persistence.Context;
 /// Inherits from IdentityDbContext to get ASP.NET Core Identity tables
 /// </summary>
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
-{
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+{    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        
+        // Suppress the non-deterministic model warning
+        optionsBuilder.ConfigureWarnings(warnings =>
+            warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
     }
 
     // Additional DbSets for custom entities
@@ -208,9 +216,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.JwtId).HasMaxLength(255).IsRequired();
             entity.Property(e => e.IpAddress).HasMaxLength(45);
             entity.Property(e => e.UserAgent).HasMaxLength(500);
-        });
-
-        // Configure ASP.NET Core Identity table names
+        });        // Configure ASP.NET Core Identity table names
         builder.Entity<ApplicationUser>().ToTable("Users");
         builder.Entity<ApplicationRole>().ToTable("Roles");
         builder.Entity<Microsoft.AspNetCore.Identity.IdentityUserRole<string>>().ToTable("UserRoles");
@@ -219,143 +225,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Entity<Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>>().ToTable("RoleClaims");
         builder.Entity<Microsoft.AspNetCore.Identity.IdentityUserToken<string>>().ToTable("UserTokens");
         
-        // Seed initial data
-        SeedData(builder);
-    }
-
-    private static void SeedData(ModelBuilder builder)
-    {
-        // Seed Permissions
-        var permissions = new List<Permission>();
-        var permissionId = 1;
-        
-        // Add all permissions from Constants
-        foreach (var permission in Identity.Domain.Constants.Permissions.AllPermissions)
-        {
-            var category = GetPermissionCategory(permission);
-            permissions.Add(new Permission
-            {
-                Id = permissionId++,
-                Name = permission,
-                Description = GetPermissionDescription(permission),
-                Category = category,
-                CreatedDate = DateTime.UtcNow,
-                IsActive = true
-            });
-        }
-        
-        builder.Entity<Permission>().HasData(permissions);
-        
-        // Seed Roles
-        var roles = new List<ApplicationRole>();
-        foreach (var roleName in Identity.Domain.Constants.Roles.AllRoles)
-        {
-            roles.Add(new ApplicationRole
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = roleName,
-                NormalizedName = roleName.ToUpper(),
-                Description = GetRoleDescription(roleName),
-                CreatedDate = DateTime.UtcNow,
-                IsActive = true,
-                IsSystemRole = true,
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            });
-        }
-        
-        builder.Entity<ApplicationRole>().HasData(roles);
-        
-        // Seed RolePermissions based on DefaultRolePermissions mapping
-        var rolePermissions = new List<RolePermission>();
-        var rolePermissionId = 1;
-        
-        foreach (var role in roles)
-        {
-            var rolePermissionNames = Identity.Domain.Configuration.DefaultRolePermissions.GetPermissionsForRole(role.Name!);
-            foreach (var permissionName in rolePermissionNames)
-            {
-                var permission = permissions.FirstOrDefault(p => p.Name == permissionName);
-                if (permission != null)
-                {
-                    rolePermissions.Add(new RolePermission
-                    {
-                        Id = rolePermissionId++,
-                        RoleId = role.Id,
-                        PermissionId = permission.Id,
-                        GrantedDate = DateTime.UtcNow,
-                        GrantedBy = "System"
-                    });
-                }
-            }
-        }
-        
-        builder.Entity<RolePermission>().HasData(rolePermissions);
-    }
-    
-    private static string GetPermissionCategory(string permission)
-    {
-        return permission.Split('.')[0] switch
-        {
-            "users" => Identity.Domain.Constants.PermissionCategories.UserManagement,
-            "roles" => Identity.Domain.Constants.PermissionCategories.RoleManagement,
-            "permissions" => Identity.Domain.Constants.PermissionCategories.PermissionManagement,
-            "parts" => Identity.Domain.Constants.PermissionCategories.PartsManagement,
-            "inventory" => Identity.Domain.Constants.PermissionCategories.InventoryManagement,
-            "orders" => Identity.Domain.Constants.PermissionCategories.OrderManagement,
-            "marketing" or "discounts" or "featured-items" or "campaigns" => Identity.Domain.Constants.PermissionCategories.MarketingPromotions,
-            "finance" or "accounts" or "payments" or "invoices" or "refunds" => Identity.Domain.Constants.PermissionCategories.FinanceAccounting,
-            "support" or "tickets" or "customer" or "complaints" => Identity.Domain.Constants.PermissionCategories.CustomerSupport,
-            "delivery" or "logistics" or "route" => Identity.Domain.Constants.PermissionCategories.DeliveryLogistics,
-            "vendors" or "vendor" => Identity.Domain.Constants.PermissionCategories.VendorManagement,
-            "affiliate" or "commissions" => Identity.Domain.Constants.PermissionCategories.AffiliateManagement,
-            "reports" or "analytics" or "dashboard" => Identity.Domain.Constants.PermissionCategories.Reporting,
-            "system" or "audit-logs" => Identity.Domain.Constants.PermissionCategories.SystemAdministration,
-            _ => "General"
-        };
-    }
-    
-    private static string GetPermissionDescription(string permission)
-    {
-        var parts = permission.Split('.');
-        var action = parts.Length > 1 ? parts[1] : parts[0];
-        var resource = parts[0];
-        
-        return action switch
-        {
-            "read" => $"View {resource}",
-            "create" => $"Create {resource}",
-            "update" => $"Update {resource}",
-            "delete" => $"Delete {resource}",
-            "manage" => $"Full management of {resource}",
-            "assign" => $"Assign {resource}",
-            "approve" => $"Approve {resource}",
-            "process" => $"Process {resource}",
-            "export" => $"Export {resource}",
-            "tracking" => $"Track {resource}",
-            "optimization" => $"Optimize {resource}",
-            "onboarding" => $"Onboard {resource}",
-            "interact" => $"Interact with {resource}",
-            "handle" => $"Handle {resource}",
-            "on-behalf" => $"Act on behalf for {resource}",
-            "access" => $"Access {resource}",
-            _ => $"Perform {action} on {resource}"
-        };
-    }
-    
-    private static string GetRoleDescription(string roleName)
-    {
-        return roleName switch
-        {
-            Identity.Domain.Constants.Roles.Admin => "System administrator with full access to all features",
-            Identity.Domain.Constants.Roles.Customer => "Customer who purchases auto parts from the platform",
-            Identity.Domain.Constants.Roles.Mechanic => "Mechanic who does affiliate marketing and can also be a customer",
-            Identity.Domain.Constants.Roles.Vendor => "Vendor who lists auto parts in the platform",
-            Identity.Domain.Constants.Roles.Marketer => "Manages featured items, discounts, and overall parts promotions",
-            Identity.Domain.Constants.Roles.Finance => "Handles finance operations, accounts payable and receivable",
-            Identity.Domain.Constants.Roles.CustomerSupport => "Provides customer support and handles complaints",
-            Identity.Domain.Constants.Roles.Delivery => "Handles order delivery to customers",
-            Identity.Domain.Constants.Roles.DeliveryManager => "Manages overall delivery and logistics operations",
-            _ => $"{roleName} role"
-        };
+        // Seed data removed to prevent migration issues - will be handled at application startup
     }
 }

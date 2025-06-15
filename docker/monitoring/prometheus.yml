@@ -1,0 +1,85 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alerts.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # cAdvisor for container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  # ASP.NET Core services
+  - job_name: 'identity-api'
+    static_configs:
+      - targets: ['identity-api:80']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'catalog-api'
+    static_configs:
+      - targets: ['catalog-api:80']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'orders-api'
+    static_configs:
+      - targets: ['orders-api:80']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['api-gateway:80']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Infrastructure services
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'consul'
+    static_configs:
+      - targets: ['consul:8500']
+    metrics_path: '/v1/agent/metrics'
+    params:
+      format: ['prometheus']
+    scrape_interval: 30s
+
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['rabbitmq:15692']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Service discovery via Consul
+  - job_name: 'consul-services'
+    consul_sd_configs:
+      - server: 'consul:8500'
+        services: []
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        target_label: job
+      - source_labels: [__meta_consul_service_address]
+        target_label: __address__
+        replacement: '${1}:${__meta_consul_service_port}'

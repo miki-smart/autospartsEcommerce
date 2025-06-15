@@ -1,5 +1,5 @@
 # Migration container for Identity API
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS migrator
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS migrator
 WORKDIR /app
 
 # Copy solution file and project files
@@ -39,10 +39,12 @@ until pg_isready -h postgres -p 5432 -U postgres; do\n\
 done\n\
 \n\
 echo "PostgreSQL is up - executing migrations"\n\
-dotnet ef database update --context Identity.Persistence.Context.ApplicationDbContext\n\
+dotnet ef database update --context ApplicationDbContext\n\
 \n\
 echo "Migrations completed successfully"' > /app/migrate.sh
 
 RUN chmod +x /app/migrate.sh
 
 ENTRYPOINT ["/app/migrate.sh"]
+
+

@@ -1,0 +1,21 @@
+-- Create databases for each service
+CREATE DATABASE "IdentityDb";
+CREATE DATABASE "CatalogDb";
+CREATE DATABASE "OrdersDb";
+CREATE DATABASE "InventoryDb";
+CREATE DATABASE "PaymentDb";
+CREATE DATABASE "NotificationDb";
+CREATE DATABASE "LogisticsDb";
+CREATE DATABASE "SellerDb";
+CREATE DATABASE "SearchDb";
+
+-- Grant permissions
+GRANT ALL PRIVILEGES ON DATABASE "IdentityDb" TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE "CatalogDb" TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE "OrdersDb" TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE "InventoryDb" TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE "PaymentDb" TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE "NotificationDb" TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE "LogisticsDb" TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE "SellerDb" TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE "SearchDb" TO postgres;

@@ -1,6 +1,7 @@
 using Identity.Application;
 using Identity.Infrastructure;
 using Identity.Persistence;
+using Identity.API.Services;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
@@ -100,6 +101,9 @@ builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection(
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
+// Add default user service
+builder.Services.AddScoped<DefaultUserService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -142,5 +146,52 @@ app.MapGet("/", () => "AutoParts Identity API - Navigate to /health for status")
     .WithOpenApi();
 
 Log.Information("Starting AutoParts Identity API...");
+
+// Initialize default users and roles
+using (var scope = app.Services.CreateScope())
+{
+    var defaultUserService = scope.ServiceProvider.GetRequiredService<DefaultUserService>();
+    await defaultUserService.InitializeAsync();
+}
+
+// Register with Consul on startup
+_ = Task.Run(async () =>
+{
+    try
+    {
+        await Task.Delay(5000); // Wait for service to be ready
+        
+        var httpClient = new HttpClient();
+        var consulUrl = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://consul:8500";
+        var serviceId = Environment.GetEnvironmentVariable("SERVICE_ID") ?? "identity-api";
+        var serviceName = Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "identity-api";
+        var servicePort = Environment.GetEnvironmentVariable("SERVICE_PORT") ?? "80";
+        var serviceAddress = Environment.GetEnvironmentVariable("SERVICE_ADDRESS") ?? "identity-api";
+        
+        var registration = new
+        {
+            ID = serviceId,
+            Name = serviceName,
+            Address = serviceAddress,
+            Port = int.Parse(servicePort),
+            Check = new
+            {
+                HTTP = $"http://{serviceAddress}:{servicePort}/health",
+                Interval = "30s",
+                DeregisterCriticalServiceAfter = "90s"
+            }
+        };
+
+        var json = System.Text.Json.JsonSerializer.Serialize(registration);
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        
+        var response = await httpClient.PutAsync($"{consulUrl}/v1/agent/service/register", content);
+        Console.WriteLine($"Consul registration response: {response.StatusCode}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to register with Consul: {ex.Message}");
+    }
+});
 
 app.Run();
