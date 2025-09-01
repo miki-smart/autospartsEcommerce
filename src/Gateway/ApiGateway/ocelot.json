@@ -1,27 +1,8 @@
 {
   "Routes": [    {
-      "UpstreamPathTemplate": "/api/identity/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],      "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "http",
-      "ServiceName": "identity-api",
-      "LoadBalancerOptions": { "Type": "LeastConnection" },
-      "RateLimitOptions": { "EnableRateLimiting": true, "Period": "1s", "Limit": 10 },
-      "QoSOptions": { "ExceptionsAllowedBeforeBreaking": 3, "DurationOfBreak": 30000, "TimeoutValue": 10000 },
-      "RouteIsCaseSensitive": false,
-      "DangerousAcceptAnyServerCertificateValidator": true
-    },
-    {
-      "UpstreamPathTemplate": "/api/identity/health",
-      "UpstreamHttpMethod": [ "Get" ],      "DownstreamPathTemplate": "/health",
-      "DownstreamScheme": "http",
-      "ServiceName": "identity-api",
-      "LoadBalancerOptions": { "Type": "LeastConnection" },
-      "RouteIsCaseSensitive": false,
-      "DangerousAcceptAnyServerCertificateValidator": true
-    },
-    {
       "UpstreamPathTemplate": "/api/catalog/health",
-      "UpstreamHttpMethod": [ "Get" ],      "DownstreamPathTemplate": "/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/health",
       "DownstreamScheme": "http",
       "ServiceName": "catalog-api",
       "LoadBalancerOptions": { "Type": "LeastConnection" },
@@ -30,7 +11,8 @@
     },
     {
       "UpstreamPathTemplate": "/api/catalog/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],      "DownstreamPathTemplate": "/api/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "catalog-api",
       "LoadBalancerOptions": { "Type": "LeastConnection" },
@@ -44,7 +26,8 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },    {
       "UpstreamPathTemplate": "/api/orders/health",
-      "UpstreamHttpMethod": [ "Get" ],      "DownstreamPathTemplate": "/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/health",
       "DownstreamScheme": "http",
       "ServiceName": "order-api",
       "LoadBalancerOptions": { "Type": "LeastConnection" },
@@ -53,7 +36,8 @@
     },
     {
       "UpstreamPathTemplate": "/api/orders/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],      "DownstreamPathTemplate": "/api/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "order-api",
       "LoadBalancerOptions": { "Type": "LeastConnection" },
@@ -61,16 +45,68 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
-      "RateLimitOptions": { "EnableRateLimiting": true, "Period": "1s", "Limit": 10 },
+      "RateLimitOptions": { "EnableRateLimiting": true, "Period": "1s", "Limit": 10 },      "QoSOptions": { "ExceptionsAllowedBeforeBreaking": 3, "DurationOfBreak": 30000, "TimeoutValue": 10000 },
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },    {
+      "UpstreamPathTemplate": "/api/identity/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPort": {
+        "Host": "identity-api",
+        "Port": 8084
+      },
+      "UseServiceDiscovery": false,
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },    {
+      "UpstreamPathTemplate": "/api/identity/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ],
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPort": {
+        "Host": "identity-api",
+        "Port": 8084
+      },
+      "UseServiceDiscovery": false,
+      "RateLimitOptions": { "EnableRateLimiting": true, "Period": "1s", "Limit": 20 },
       "QoSOptions": { "ExceptionsAllowedBeforeBreaking": 3, "DurationOfBreak": 30000, "TimeoutValue": 10000 },
       "RouteIsCaseSensitive": false,
       "DangerousAcceptAnyServerCertificateValidator": true
+    },    {
+      "UpstreamPathTemplate": "/.well-known/{everything}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/.well-known/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPort": {
+        "Host": "identity-api",
+        "Port": 8084
+      },
+      "UseServiceDiscovery": false,
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },    {
+      "UpstreamPathTemplate": "/connect/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "DownstreamPathTemplate": "/connect/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPort": {
+        "Host": "identity-api",
+        "Port": 8084
+      },
+      "UseServiceDiscovery": false,
+      "RouteIsCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
     }
-  ],  "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:7000",    "ServiceDiscoveryProvider": {
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:7000",
+    "ServiceDiscoveryProvider": {
       "Host": "consul",
       "Port": 8500,
-      "Type": "Consul"
+      "Type": "Consul",
+      "PollingInterval": 5000
     },
     "RateLimitOptions": {
       "ClientIdHeader": "X-ClientId",

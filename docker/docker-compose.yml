@@ -77,22 +77,14 @@ services:
       dockerfile: src/Identity/Identity.API/Dockerfile
     container_name: identity-api
     ports:
-      - "5001:8080"
+      - "5001:8084"
     depends_on:
-      consul:
-        condition: service_healthy
       postgres:
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_URLS=http://+:8084
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=IdentityDb;Username=postgres;Password=123456
-      - ServiceConfig__ServiceName=identity-api
-      - ServiceConfig__ServiceId=identity-api-1
-      - ServiceConfig__ServiceAddress=identity-api
-      - ServiceConfig__ServicePort=8080
-      - Consul__Host=consul
-      - Consul__Port=8500
     networks:
       - autoparts-network   
     healthcheck:
@@ -100,7 +92,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-
   catalog-api:
     build:
       context: ..
@@ -125,17 +116,22 @@ services:
       - ServiceConfig__ServiceId=catalog-api-1
       - ServiceConfig__ServiceAddress=catalog-api
       - ServiceConfig__ServicePort=8081
-      - IdentityServer__Authority=http://identity-api:8080
+      - IdentityServer__Authority=http://identity-api:8084
       - IdentityServer__RequireHttpsMetadata=false
       - RabbitMQ__HostName=rabbit-mq
       - RabbitMQ__UserName=admin
       - RabbitMQ__Password=admin123
       - RabbitMQ__VirtualHost=/
-      - RabbitMQ__Port=5672
+      - RabbitMQ__Port=5672      
       - RabbitMQ__ExchangeName=catalog_events
       - ConnectionStrings__Redis=redis:6379
       - Consul__Host=consul
       - Consul__Port=8500
+      - CONSUL_URL=http://consul:8500
+      - SERVICE_ID=catalog-api
+      - SERVICE_NAME=catalog-api
+      - SERVICE_PORT=8081
+      - SERVICE_ADDRESS=catalog-api
     networks:
       - autoparts-network
     healthcheck:
@@ -143,7 +139,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-
   order-api:
     build:
       context: ..
@@ -166,11 +161,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8082
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=OrdersDb;Username=postgres;Password=123456
-      - ServiceConfig__ServiceName=order-api
-      - ServiceConfig__ServiceId=order-api-1
-      - ServiceConfig__ServiceAddress=order-api
-      - ServiceConfig__ServicePort=8082
-      - IdentityServer__Authority=http://identity-api:8080
+      - IdentityServer__Authority=http://identity-api:8084
       - IdentityServer__RequireHttpsMetadata=false
       - ExternalServices__CatalogApi=http://catalog-api:8081
       - RabbitMQ__HostName=rabbit-mq
@@ -182,6 +173,11 @@ services:
       - ConnectionStrings__Redis=redis:6379
       - Consul__Host=consul
       - Consul__Port=8500
+      - CONSUL_URL=http://consul:8500
+      - SERVICE_ID=order-api
+      - SERVICE_NAME=order-api
+      - SERVICE_PORT=8082
+      - SERVICE_ADDRESS=order-api
     networks:
       - autoparts-network
     healthcheck:
@@ -196,7 +192,7 @@ services:
       dockerfile: src/Gateway/ApiGateway/Dockerfile
     container_name: api-gateway
     ports:
-      - "7000:8083"
+      - "7000:8083"    
     depends_on:
       consul:
         condition: service_healthy
@@ -209,10 +205,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8083
-      - IdentityServer__Authority=http://identity-api:8080
+      - IdentityServer__Authority=http://identity-api:8084
       - IdentityServer__RequireHttpsMetadata=false
       - Consul__Host=consul
       - Consul__Port=8500
+      - CONSUL_URL=http://consul:8500
+      - SERVICE_ID=api-gateway
+      - SERVICE_NAME=api-gateway
+      - SERVICE_PORT=8083
+      - SERVICE_ADDRESS=api-gateway
     networks:
       - autoparts-network
     healthcheck:

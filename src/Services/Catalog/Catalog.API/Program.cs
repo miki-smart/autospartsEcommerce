@@ -1,6 +1,7 @@
 using Catalog.Application;
 using Catalog.Infrastructure;
 using Catalog.Persistence;
+using Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,43 +31,33 @@ app.MapControllers();
 app.MapHealthChecks("/health");
 
 // Register with Consul on startup
-_ = Task.Run(async () =>
+app.Lifetime.ApplicationStarted.Register(() =>
 {
-    try
+    var consulClient = app.Services.GetRequiredService<IConsulClient>();
+    var consulUrl = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://consul:8500";
+    var serviceId = Environment.GetEnvironmentVariable("SERVICE_ID") ?? "catalog-api";
+    var serviceName = Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "catalog-api";
+    var servicePort = Environment.GetEnvironmentVariable("SERVICE_PORT") ?? "80";
+    var serviceAddress = Environment.GetEnvironmentVariable("SERVICE_ADDRESS") ?? "catalog-api";
+    var registration = new AgentServiceRegistration()
     {
-        await Task.Delay(5000); // Wait for service to be ready
-        
-        var httpClient = new HttpClient();
-        var consulUrl = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://consul:8500";
-        var serviceId = Environment.GetEnvironmentVariable("SERVICE_ID") ?? "catalog-api";
-        var serviceName = Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "catalog-api";
-        var servicePort = Environment.GetEnvironmentVariable("SERVICE_PORT") ?? "80";
-        var serviceAddress = Environment.GetEnvironmentVariable("SERVICE_ADDRESS") ?? "catalog-api";
-        
-        var registration = new
+        ID = serviceId,
+        Name = serviceName,
+        Address = serviceAddress, // docker container name
+        Port = int.Parse(servicePort), // container's internal port
+        Check = new AgentServiceCheck
         {
-            ID = serviceId,
-            Name = serviceName,
-            Address = serviceAddress,
-            Port = int.Parse(servicePort),
-            Check = new
-            {
-                HTTP = $"http://{serviceAddress}:{servicePort}/health",
-                Interval = "30s",
-                DeregisterCriticalServiceAfter = "90s"
-            }
-        };
-
-        var json = System.Text.Json.JsonSerializer.Serialize(registration);
-        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        
-        var response = await httpClient.PutAsync($"{consulUrl}/v1/agent/service/register", content);
-        Console.WriteLine($"Consul registration response: {response.StatusCode}");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Failed to register with Consul: {ex.Message}");
-    }
+            HTTP = $"http://{serviceAddress}/health",
+            Interval = TimeSpan.FromSeconds(10)
+        }
+    };
+    consulClient.Agent.ServiceRegister(registration).Wait();
 });
 
+app.Lifetime.ApplicationStopping.Register(() =>
+{
+    var consulClient = app.Services.GetRequiredService<IConsulClient>();
+    var serviceId = Environment.GetEnvironmentVariable("SERVICE_ID") ?? "catalog-api";
+    consulClient.Agent.ServiceDeregister(serviceId).Wait();
+});
 app.Run();
